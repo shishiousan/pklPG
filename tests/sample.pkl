@@ -1,0 +1,47 @@
+import "package://pkg.pkl-lang.org/pkl-pantry/pkl.toml@1.0.0#/toml.pkl"
+import "pkl:math"
+
+output {
+  renderer = new toml.Renderer {}
+}
+
+kernel {
+  name=  "VST2LinearAcoustic"
+  engine = "NATIVE_SERIAL"
+  algorithm =  "Trapezoidal"
+  startTime = math.sin(0.0)
+  endTime = math.cos(0.0)
+  dt = 1.0/6.0
+  unifyVTK = true 
+  vtkOutputFreq = 2
+  linSolver {
+  solverName = "CG"
+  maxIter = -1
+  }
+  solidmaterial = new Listing {
+  new { 
+  materialName= "Solid"
+   region {
+      isSelectionByMeshID = true 
+   meshID {
+      surface = List(1)
+      }
+    }
+  property = new Listing {
+  new {
+    name = "massDensity"
+    returnType = "Scalar"
+    argType = "Constant"
+    value = 1.0
+  }
+  (this[0]) {
+    name = "squarePhaseVelocity"
+    value = 2.0
+  }}}
+  }
+}
+
+
+
+
+
